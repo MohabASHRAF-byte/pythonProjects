@@ -9,8 +9,8 @@ soup = BeautifulSoup(response.text, "html.parser")
 # getting handle
 try:
     h1s = soup.find("h1")
-    name = h1s.text.split("\n")
-    print(f"Handle : {name[1]}")
+    # strip function to return the text without \n in the begin or in the end
+    print(f"Handle : {h1s.get_text().strip()}")
     li = ["user-gray", "user-green", "user-cyan", "user-blue", "user-violet", "user-orange", "user-red",
           "user-legendary"]
     # getting rating

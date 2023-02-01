@@ -1,17 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[8]:
-
 
 import requests as req
 import csv
 from bs4 import BeautifulSoup
-
-
-# In[18]:
-
-
 def DG(x):
     for xxx in x:
         print(xxx)
@@ -21,18 +11,8 @@ def DT(x):
 def DS(x):
     for xxx in x:
         print(xxx.get_text().strip())
-
-
-# In[19]:
-
-
 data=[]
 dataset=[]
-
-
-# In[22]:
-
-
 page_number=1
 check=False
 while True :
@@ -60,20 +40,8 @@ while True :
     
     for i in data:
         dataset.append(i)
-
-
-# In[23]:
-
-
 with open(f"Books.csv" ,'w',newline="",encoding='UTF-8') as wr:
     writer =csv.writer(wr)
     header=["Title" ,"Author","Price","Image"]
     writer.writerow(header)
     writer.writerows(dataset)
-
-
-# In[ ]:
-
-
-
-

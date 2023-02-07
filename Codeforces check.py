@@ -121,6 +121,7 @@ def Check(P_output, C_Output, cnt):
 def main():
     x = input("Enter contest number ")
     y = input("Enter problem number ")
+    path=r"C:\Users\amoha\CLionProjects\untitled1\main.cpp"
     ScrappedInput, ScrappedOutput = Requesting(x, y)
     start_time = time.time()
     CodeForcesTests = Get_input(ScrappedInput)
@@ -128,14 +129,12 @@ def main():
     program_output = []
 
     for Test in CodeForcesTests:
-        program_output.append(Run_program(Test, r"C:\Users\amoha\CLionProjects\untitled1\main.cpp"))
+        program_output.append(Run_program(Test, path))
     if Check(program_output, CodeForcesOutput, 1):
         print("\033[0;34m" + "Passed !!")
     else:
         print("\033[0;31mCheck again !!" + "\033[0m")
 
     print("\033[0;37m" + "Time taken by the program: ", round(time.time() - start_time, 2), "seconds")
-
-
 ###
 main()

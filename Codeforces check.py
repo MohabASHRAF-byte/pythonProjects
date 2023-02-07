@@ -2,12 +2,9 @@ import subprocess
 import time
 from itertools import zip_longest
 from subprocess import Popen, PIPE
-
 import requests
 from bs4 import BeautifulSoup
-
-
-# request
+# request the url
 def Requesting(number, char):
     url = f"https://codeforces.com/contest/{number}/problem/{char}"
     response = requests.get(url)
@@ -15,8 +12,6 @@ def Requesting(number, char):
     ScrappedInputt = soup.find_all("div", attrs={"class", "input"})
     ScrappedOutputt = soup.find_all("div", attrs={"class", "output"})
     return ScrappedInputt, ScrappedOutputt
-
-
 # takes one parameter first the scrapped input list
 def Get_input(codeInput):
     Test_Cases = []
@@ -55,11 +50,9 @@ def Get_input(codeInput):
                         t.append(iii)
             Test_Cases.append(t)
     return Test_Cases
-
-
-###
-def Run_program(Input_Test):
-    result = subprocess.run(["g++", "-std=c++20", "test.cpp", "-o", "program"], stdout=subprocess.PIPE,
+# uses to run the program and return list of the output
+def Run_program(Input_Test, path):
+    result = subprocess.run(["g++", "-std=c++20", path, "-o", "program"], stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     p = Popen(["program"], stdout=PIPE, stdin=PIPE)
     for line in Input_Test:
@@ -71,9 +64,7 @@ def Run_program(Input_Test):
     for i in res:
         program_outputt.append(i.decode().strip())
     return program_outputt
-
-
-###
+# uses to get the output for codeforces
 def Get_Output(output):
     temp = []
     scrapped = []
@@ -88,13 +79,10 @@ def Get_Output(output):
         scrapped.append(ss)
         temp = []
     return scrapped
-
-
-###
-def Check(P_output, C_Output):
+# to check the identity of the two outputs
+def Check(P_output, C_Output, cnt):
     flag4 = True
     flag5 = True
-    cnt = 1
     for Program_Test, Codeforces_Test in zip_longest(P_output, C_Output, fillvalue=None):
         flag5 = True
         if Program_Test is None:
@@ -129,42 +117,25 @@ def Check(P_output, C_Output):
             print("\033[1;31m" + f"Test {cnt} Failed !!" + "\033[0m")
         cnt += 1
     return flag4
+# main
+def main():
+    x = input("Enter contest number ")
+    y = input("Enter problem number ")
+    ScrappedInput, ScrappedOutput = Requesting(x, y)
+    start_time = time.time()
+    CodeForcesTests = Get_input(ScrappedInput)
+    CodeForcesOutput = Get_Output(ScrappedOutput)
+    program_output = []
+
+    for Test in CodeForcesTests:
+        program_output.append(Run_program(Test, r"C:\Users\amoha\CLionProjects\untitled1\main.cpp"))
+    if Check(program_output, CodeForcesOutput, 1):
+        print("\033[0;34m" + "Passed !!")
+    else:
+        print("\033[0;31mCheck again !!" + "\033[0m")
+
+    print("\033[0;37m" + "Time taken by the program: ", round(time.time() - start_time, 2), "seconds")
 
 
 ###
-def Formatted(li):
-    res = []
-    temp = []
-    for i in li:
-        if isinstance(i, list):
-            for ii in i:
-                temp.append(ii)
-        else:
-            temp.append(i)
-    for i in temp:
-        for ii in i.split(" "):
-            if len(ii):
-                res.append(ii.strip())
-    return res
-
-
-numli = [43, 540, 242, 1740, 1770, 1780, 1176, 1791, 1791, 1791, 1791]
-chli = ["B", 'c', 'c', 'h', 'h', 'd', 'e', 'e', 'd', 'g2', 'g1']
-# main
-x = input("Enter contest number ")
-y = input("Enter problem number ")
-ScrappedInput, ScrappedOutput = Requesting(x, y)
-start_time = time.time()
-CodeForcesTests = Get_input(ScrappedInput)
-CodeForcesOutput = Get_Output(ScrappedOutput)
-program_output = []
-
-
-for Test in CodeForcesTests:
-    program_output.append(Run_program(Formatted(Test)))
-if Check(program_output, CodeForcesOutput):
-    print("\033[0;34m" + "Passed !!")
-else:
-    print("\033[0;31mCheck again !!" + "\033[0m")
-
-print("\033[0;37m" + "Time taken by the program: ", round(time.time() - start_time, 2), "seconds")
+main()
